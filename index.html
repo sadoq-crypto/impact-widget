@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Impact Widget</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Floating Icon */
+  .impact-icon {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    background: #1f9d55;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    z-index: 9999;
+  }
+
+  /* Fullscreen Modal */
+  .impact-modal {
+    position: fixed;
+    inset: 0;
+    background: #0f172a;
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+
+  .impact-card {
+    background: #111827;
+    padding: 32px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+  }
+
+  .impact-card h1 {
+    margin-top: 0;
+    color: #22c55e;
+  }
+
+  .impact-metric {
+    margin: 16px 0;
+    font-size: 18px;
+  }
+
+  .close-btn {
+    margin-top: 24px;
+    background: #22c55e;
+    color: #000;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- Floating Icon -->
+<div class="impact-icon" onclick="openImpact()">🌱</div>
+
+<!-- Fullscreen Modal -->
+<div class="impact-modal" id="impactModal">
+  <div class="impact-card">
+    <h1>Environmental Impact</h1>
+
+    <div class="impact-metric" id="trees">Loading…</div>
+    <div class="impact-metric" id="co2"></div>
+    <div class="impact-metric" id="projects"></div>
+
+    <button class="close-btn" onclick="closeImpact()">Close</button>
+  </div>
+</div>
+
+<script>
+  const API_URL = "https://ecoforest.green/api/v1/impact?org_slug=araka-digitalization";
+
+  function openImpact() {
+    document.getElementById("impactModal").style.display = "flex";
+    loadImpact();
+  }
+
+  function closeImpact() {
+    document.getElementById("impactModal").style.display = "none";
+  }
+
+  async function loadImpact() {
+    try {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+
+      document.getElementById("trees").innerText =
+        "🌳 Trees planted: " + data.trees_planted;
+
+      document.getElementById("co2").innerText =
+        "💨 CO₂ offset: " + data.co2_offset_kg + " kg";
+
+      document.getElementById("projects").innerText =
+        "📍 Projects: " + data.projects;
+
+    } catch (e) {
+      document.getElementById("trees").innerText =
+        "Unable to load impact data";
+    }
+  }
+</script>
+
+</body>
+</html>
